@@ -1,0 +1,58 @@
+# Detection Thresholds and Scoring Configuration
+
+# How many candidate matches to retrieve per verse
+retrieval:
+  top_k: 10  # Get top 10 candidates from embedding search
+
+# Score thresholds for different methods (0.0 to 1.0)
+thresholds:
+  # Minimum scores to consider a match worth investigating
+  ngram_overlap: 0.15      # Jaccard similarity of n-grams
+  tfidf_cosine: 0.20       # TF-IDF cosine similarity
+  embedding_cosine: 0.70   # Embedding similarity (higher = more similar)
+
+  # LLM confidence thresholds
+  llm_tier1_pass: 0.5      # Minimum score to pass to Tier 2
+  llm_tier2_high: 0.8      # High confidence match
+  llm_tier2_medium: 0.5    # Medium confidence match
+
+# Composite scoring weights
+# These determine how much each method contributes to final score
+scoring_weights:
+  ngram: 0.15
+  tfidf: 0.15
+  embedding: 0.30
+  llm: 0.40
+
+# N-gram settings
+ngram:
+  sizes: [2, 3, 4]  # Bigrams, trigrams, 4-grams
+  min_phrase_length: 3  # Minimum words in a phrase match
+
+# Match type classification thresholds
+classification:
+  direct_copy:
+    min_ngram_overlap: 0.50    # >50% n-gram overlap = likely direct copy
+    min_phrase_match: 5        # At least 5-word exact phrase
+
+  paraphrase:
+    min_embedding_score: 0.85  # Very high semantic similarity
+    max_ngram_overlap: 0.30    # But low lexical overlap
+
+  thematic:
+    min_embedding_score: 0.70  # Moderate semantic similarity
+    max_ngram_overlap: 0.15    # Low lexical overlap
+
+# Filters
+filters:
+  min_verse_length: 10         # Skip very short verses (word count)
+  min_source_length: 20        # Skip very short source passages
+  exclude_common_phrases: true # Filter out "and it came to pass" etc.
+
+common_phrases_to_ignore:
+  - "and it came to pass"
+  - "and behold"
+  - "and now"
+  - "thus saith the lord"
+  - "the word of the lord"
+  # These are too common to be meaningful matches

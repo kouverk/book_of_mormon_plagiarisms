@@ -1,0 +1,55 @@
+# Model Configuration
+
+# Embedding models
+embeddings:
+  # Primary: OpenAI (paid, high quality)
+  openai:
+    model: "text-embedding-3-large"
+    dimensions: 3072
+    batch_size: 100
+    cost_per_million_tokens: 0.13
+
+  # Alternative: Sentence-BERT (free, local)
+  sentence_bert:
+    model: "all-MiniLM-L6-v2"
+    dimensions: 384
+
+  # Which to use by default
+  default: "openai"
+
+# LLM models for semantic analysis
+llm:
+  # Tier 1: Fast/cheap for initial filtering
+  tier1:
+    provider: "openai"
+    model: "gpt-4o-mini"
+    max_tokens: 500
+    temperature: 0.0
+    cost_per_million_input: 0.15
+    cost_per_million_output: 0.60
+
+  # Tier 2: Accurate for deep analysis of promising matches
+  tier2:
+    provider: "openai"
+    model: "gpt-4o"
+    max_tokens: 1000
+    temperature: 0.0
+    cost_per_million_input: 2.50
+    cost_per_million_output: 10.00
+
+  # Alternative: Claude (if you set up Anthropic API)
+  claude_tier1:
+    provider: "anthropic"
+    model: "claude-3-5-haiku-20241022"
+    max_tokens: 500
+    temperature: 0.0
+
+  claude_tier2:
+    provider: "anthropic"
+    model: "claude-sonnet-4-20250514"
+    max_tokens: 1000
+    temperature: 0.0
+
+# Named Entity Recognition
+ner:
+  model: "en_core_web_sm"  # SpaCy model

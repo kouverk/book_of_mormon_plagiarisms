@@ -1,0 +1,105 @@
+# Source Texts Configuration
+# These are the texts we're comparing the Book of Mormon against
+
+target:
+  book_of_mormon:
+    name: "Book of Mormon"
+    date: 1830
+    author: "Joseph Smith"
+    file: "bom-jspapers-1830.txt"
+    description: "First edition Book of Mormon from Joseph Smith Papers"
+
+primary_sources:
+  view_of_hebrews:
+    name: "View of the Hebrews"
+    date: 1825
+    edition: "2nd"
+    author: "Ethan Smith"
+    file: null  # To be downloaded
+    archive_url: "https://archive.org/details/viewofhebrewsort00smit"
+    description: "Enlarged 2nd edition. Oliver Cowdery's family lived in Poultney, VT where Ethan Smith was pastor."
+    key_parallels:
+      - "Hebrew migration to Americas"
+      - "Civilized vs barbarous peoples"
+      - "Buried sacred records"
+      - "Breastplate, Urim & Thummim"
+
+  the_late_war:
+    name: "The Late War"
+    date: 1816
+    author: "Gilbert Hunt"
+    file: null  # To be downloaded
+    archive_url: "https://archive.org/details/latewarbetween_00hunt"
+    text_url: "https://archive.org/stream/latewarbetween_00hunt/latewarbetween_00hunt_djvu.txt"
+    description: "KJV-style history of War of 1812, used as school textbook"
+    key_parallels:
+      - "Stripling soldiers"
+      - "Chief captains leading thousands"
+      - "Fortifications/entrenchments"
+      - "Rod of iron imagery"
+      - "Earthquakes and darkness"
+
+  first_book_of_napoleon:
+    name: "First Book of Napoleon"
+    date: 1809
+    author: "Unknown (attributed to Modeste Gruau)"
+    file: null  # To be downloaded
+    archive_url: "https://archive.org/details/firstbooknapole00gruagoog"
+    description: "KJV-style history of Napoleon, 'it came to pass' language"
+    key_parallels:
+      - "'And behold it came to pass' opening style"
+      - "Inheritances, gold and silver"
+      - "Foolish imaginations of their hearts"
+
+  kjv_bible:
+    name: "King James Bible"
+    date: 1769
+    author: "Various"
+    file: null  # To be downloaded
+    description: "1769 edition with known translation errors that appear in BoM"
+    key_parallels:
+      - "Isaiah chapters copied verbatim"
+      - "Mark 16:15-18 in Mormon 9:22-24"
+      - "Sermon on the Mount in 3 Nephi"
+
+secondary_sources:
+  # These will be added in future phases
+  wonders_of_nature:
+    name: "Wonders of Nature and Providence"
+    date: 1825
+    author: "Josiah Priest"
+    enabled: false
+    notes: "Josiah Priest knew Oliver Cowdery; 'whence no traveler returns' phrase"
+
+  pilgrims_progress:
+    name: "Pilgrim's Progress"
+    date: 1678
+    author: "John Bunyan"
+    enabled: false
+    notes: "Lehi's dream parallels; place names like Desolation, Bountiful"
+
+  holy_war:
+    name: "The Holy War"
+    date: 1682
+    author: "John Bunyan"
+    enabled: false
+    notes: "War between light/dark peoples; secret combinations"
+
+  apocrypha:
+    name: "The Apocrypha (2 Maccabees)"
+    date: "ancient"
+    enabled: false
+    notes: "Contains name 'Nephi'; Judith/Holofernes parallels Nephi/Laban"
+
+other_lds_texts:
+  doctrine_and_covenants:
+    name: "Doctrine and Covenants"
+    date: 1835
+    file: "d&c-jspapers-1835.txt"
+    description: "For cross-reference within LDS canon"
+
+  pearl_of_great_price:
+    name: "Pearl of Great Price"
+    date: 1851
+    file: "pogp-internet-archive-1851.txt"
+    description: "For cross-reference within LDS canon"

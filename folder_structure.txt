@@ -1,0 +1,25 @@
+/anti-mormon project
+--.DS_Store
+--.gitignore
+--embed_sources.py
+--/embeddings
+----faiss_index.faiss
+----source_meta.csv
+--/file-convert
+----bom-convert.py
+----dnc-convert.py
+--folder_structure.py
+--folder_structure.txt
+--match_engine.py
+--requirements.txt
+--/results
+----matches.json
+--search_and_match.py
+--/texts
+----.DS_Store
+----bom-1830-2025-06-07 0737pm.pdf
+----bom-jspapers-1830-2025-06-07 0737pm.txt
+----d&c-jspapers-1835-2025-06-08 923am.pdf
+----d&c-jspapers-1835-2025-06-08 923am.txt
+----pogp-internet-archive-1851-2025-06-08 929pm.txt
+--utils.py
