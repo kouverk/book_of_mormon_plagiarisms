@@ -2,149 +2,139 @@
 
 Detect potential literary borrowings, thematic connections, and textual parallels between the Book of Mormon and 19th-century source texts using NLP and embedding-based similarity methods.
 
+## Current Status
+
+**Classification complete!** All 19,479 high-confidence matches have been analyzed.
+
+| Match Type | Count | Description |
+|------------|-------|-------------|
+| Thematic | 18,005 | Shared theological/narrative concepts |
+| Direct Copy | 809 | Near-verbatim phrase borrowing |
+| Paraphrase | 497 | Same idea, different words |
+| None | 160 | No meaningful parallel |
+| Stylistic | 8 | KJV-style language patterns |
+
+**View the results:** Open `results/report.html` in a browser for an interactive report.
+
 ## Project Goals
 
 1. **Primary**: Detect direct textual borrowings (phrase overlap, name borrowing)
 2. **Secondary**: Identify thematic/conceptual parallels
-3. **Scale**: Exhaustive analysis of all ~6,000+ Book of Mormon verses
+3. **Scale**: Exhaustive analysis of all 6,604 Book of Mormon verses against 26,149 source passages
 
 ## Source Texts
 
-### Target Text (What We're Analyzing)
-- **Book of Mormon** (1830) - Joseph Smith
+### Target Text
+- **Book of Mormon** (1830 edition) - 6,604 verses
 
-### Primary Source Texts (Pre-1830)
-| Text | Date | Author | Key Parallels |
-|------|------|--------|---------------|
-| View of the Hebrews | 1825 (2nd ed) | Ethan Smith | Hebrew migration to Americas, civilized vs barbarous peoples, buried records |
-| The Late War | 1816 | Gilbert Hunt | KJV-style language, "stripling soldiers", fortifications, earthquakes |
-| First Book of Napoleon | 1809 | Unknown | "It came to pass" style, KJV language patterns |
-| KJV Bible | 1769 | Various | Biblical borrowing, theological concepts |
+### Source Texts Analyzed
+| Text | Date | Passages | Key Parallels |
+|------|------|----------|---------------|
+| KJV Bible | 1769 | 31,102 | Biblical borrowing, theological concepts |
+| View of the Hebrews | 1825 | ~2,000 | Hebrew migration to Americas, buried records |
+| The Late War | 1816 | ~1,500 | KJV-style language, "stripling soldiers" |
+| First Book of Napoleon | 1809 | ~1,000 | "It came to pass" style patterns |
 
-### Secondary Source Texts (Future Phases)
-- Wonders of Nature & Providence (1825) - Josiah Priest
-- Pilgrim's Progress (1678) - John Bunyan
-- The Apocrypha (2 Maccabees)
-- Spalding Manuscript (~1812)
+## Quick Start
 
-## Detection Methods
+```bash
+# Setup
+python3 -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+export OPENAI_API_KEY="your-key-here"
 
-| Method | What It Catches | Cost |
-|--------|-----------------|------|
-| N-gram overlap | Direct phrase copying | Free |
-| TF-IDF + cosine | Unusual word patterns | Free |
-| Sentence-BERT | Semantic similarity | Free |
-| OpenAI embeddings | Deep semantic | ~$1 |
-| LLM judgment | Nuanced parallels | $5-50 |
+# Generate report (data already processed)
+python run.py report
+open results/report.html
+```
 
 ## Project Structure
 
 ```
-/anti_mormon_project
-├── config.py                 # Central configuration
-├── text_parser.py            # Structured text parsing
-├── entity_extractor.py       # Named entity detection
-├── report_generator.py       # HTML/JSON output
-│
-├── embed_sources.py          # Multi-level embeddings
-├── search_and_match.py       # Multi-method pipeline
-├── match_engine.py           # Tiered LLM analysis
-├── utils.py                  # Lexical similarity methods
-│
-├── /file-convert/            # PDF to text conversion
-│   ├── bom-convert.py
-│   └── dnc-convert.py
-│
-├── /texts/
-│   ├── /raw/                 # Original PDFs/TXTs
-│   └── /structured/          # Parsed JSON files
-│
-├── /embeddings/
-│   ├── verse_level/
-│   ├── paragraph_level/
-│   └── chapter_level/
-│
-├── /calibration/
-│   └── known_parallels.json  # Ground truth from CES Letter
-│
-└── /results/
-    ├── matches.json
-    ├── report.html
-    └── matches.csv
+book_of_mormon_plagiarisms/
+├── run.py                    # Main entry point
+├── src/                      # Core Python modules
+│   ├── config.py             # Central configuration
+│   ├── database.py           # SQLite data access
+│   ├── text_parser.py        # Parse raw texts
+│   ├── utils.py              # Similarity functions
+│   ├── embed_sources.py      # Generate FAISS indices
+│   ├── embed_bom.py          # Embed BOM verses
+│   ├── search_and_match.py   # Vector similarity search
+│   ├── classify_matches.py   # LLM classification
+│   └── report_generator.py   # HTML report
+├── config/                   # YAML configuration
+├── scripts/                  # One-off converters
+├── data/
+│   ├── matches.db            # SQLite database (63,252 matches)
+│   └── embeddings/           # FAISS indices
+├── texts/raw/                # Source text files
+└── results/
+    └── report.html           # Interactive results
 ```
 
-## Setup
-
-### 1. Install Dependencies
+## Commands
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+python run.py database          # Initialize database
+python run.py embed_sources     # Generate source embeddings
+python run.py embed_bom         # Generate BOM embeddings
+python run.py search [score]    # Find matches (default: 0.4)
+python run.py classify [score]  # LLM classify (default: 0.5)
+python run.py report            # Generate HTML report
 ```
 
-### 2. Set OpenAI API Key
+## Detection Pipeline
 
-```bash
-# Add to ~/.zshrc or ~/.bashrc
-export OPENAI_API_KEY="sk-your-key-here"
-source ~/.zshrc
+```
+Raw Texts → Parser → SQLite DB → Embeddings → FAISS Index
+                                      ↓
+              BOM Verse → Vector Search → Top-K Candidates
+                                      ↓
+                              LLM Classification
+                                      ↓
+                              HTML Report
 ```
 
-### 3. Download Source Texts
-
-Download from Archive.org and place in `/texts/raw/`:
-- [View of the Hebrews (1825)](https://archive.org/details/viewofhebrewsort00smit)
-- [The Late War (1816)](https://archive.org/details/latewarbetween_00hunt)
-- [First Book of Napoleon (1809)](https://archive.org/details/firstbooknapole00gruagoog)
-
-### 4. Run the Pipeline
-
-```bash
-# Parse and structure texts
-python text_parser.py
-
-# Generate embeddings
-python embed_sources.py
-
-# Run detection pipeline
-python search_and_match.py
-
-# Generate report
-python report_generator.py
-```
+### Methods Used
+| Method | What It Catches |
+|--------|-----------------|
+| OpenAI embeddings | Deep semantic similarity |
+| FAISS vector search | Fast nearest-neighbor lookup |
+| GPT-4o-mini | Match type classification |
 
 ## Match Categories
 
-The system classifies matches into:
-- **DIRECT_COPY**: Near-verbatim phrase borrowing
-- **PARAPHRASE**: Same idea, different words
-- **THEMATIC**: Shared theological/narrative concept
-- **NAME_BORROW**: Borrowed proper nouns
-- **STRUCTURAL**: Similar plot/story beats
-- **STYLISTIC**: KJV-style language patterns
+- **direct_copy**: Near-verbatim phrase borrowing
+- **paraphrase**: Same idea, different words
+- **thematic**: Shared theological/narrative concept
+- **stylistic**: KJV-style language patterns
+- **none**: No meaningful parallel detected
+
+## How This Compares to WordTree (2013)
+
+The [WordTree Foundation](http://wordtree.org/thelatewar/) compared the BOM against 100,000 pre-1830 books using 4-gram analysis. The Late War ranked in the **top 0.001%** for rare phrase connections.
+
+| Aspect | WordTree | This Project |
+|--------|----------|--------------|
+| Method | 4-gram lexical only | Embeddings + LLM |
+| Matching | Binary phrase exists | Similarity spectrum |
+| Paraphrases | Cannot detect | Embeddings catch these |
+| Output | Corpus statistics | Verse-level explanations |
+
+WordTree was the metal detector saying "dig here." This project is the excavation - embeddings catch semantic borrowing when Joseph took an *idea* but rewrote it, and the LLM explains *why* passages connect.
 
 ## Technologies
 
-- Python 3.13
+- Python 3.12
+- SQLite - data storage
 - FAISS - vector similarity search
-- OpenAI Embeddings (text-embedding-3-large)
-- Sentence-BERT (all-MiniLM-L6-v2)
-- SpaCy - named entity recognition
-- GPT-4o / Claude - semantic analysis
-
-## Cost Estimates
-
-| Component | Estimated Cost |
-|-----------|----------------|
-| OpenAI embeddings | < $1 |
-| Tier 1 LLM filtering | $2-5 |
-| Tier 2 LLM deep analysis | $10-20 |
-| **Total** | **$15-30** |
+- OpenAI text-embedding-3-large
+- GPT-4o-mini - classification
+- Bootstrap 5 - report UI
 
 ## References
 
 - [CES Letter - Book of Mormon](https://read.cesletter.org/bom/)
-- [View of the Hebrews parallels](https://read.cesletter.org/bom/#view-of-the-hebrews)
-- [The Late War parallels](https://read.cesletter.org/bom/#the-late-war)
-- [First Book of Napoleon parallels](https://read.cesletter.org/bom/#the-first-book-of-napoleon)
+- [WordTree Foundation](http://wordtree.org/thelatewar/)
+- [WordTree 4-gram Study (GitHub)](https://github.com/wordtreefoundation/4-gram-study)

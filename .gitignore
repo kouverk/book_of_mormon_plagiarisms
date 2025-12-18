@@ -1,1 +1,22 @@
 venv/
+**/__pycache__/
+*.pyc
+
+# Logs
+logs/
+
+# Data files (large, regenerable)
+data/embeddings/*.faiss
+data/embeddings/*.csv
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
